@@ -1,5 +1,5 @@
 #include "pathfinder.h"
-
+#include  <stdio.h>
 int main(int argc, char const *argv[])
 {
     mx_usage(argc);
@@ -30,6 +30,18 @@ int main(int argc, char const *argv[])
         }
         printf("\n");
     }
+
+    int **result = (int**)malloc(first_digit * sizeof(int*));
+    for (int i = 0; i < first_digit; i++) {
+        result[i] = (int *)malloc(first_digit * sizeof(int));
+        for (int j = 0; j < first_digit; j++) {
+            result[i][j] = 0;
+        }
+    }
+    mx_finder(matrix,first_digit, result);
+    
+    mx_print_result(matrix, first_digit, result, islands);
+    
     // FREE MEMORY
     //mx_del_strarr(&islands);
     for(int i = 0; i < first_digit; i++){

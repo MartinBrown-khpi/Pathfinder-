@@ -21,4 +21,10 @@ void mx_invalid_islands(int first_digit, char **islands);
 //Parser func
 char **parse_islands(char const * filename, int size);
 int **parse_to_matrix(const char * filename, char **islands, int size);
+// Finder func
+void mx_finder(int **matrix, int size, int **result);
+// Print result func
+void mx_print_result(int **matrix,int size, int **result, char **islands);
+void mx_print_route(int **result, char **islands, int i, int j);
+//int  mx_print_dist(int **matrix, int **result, char **islands, int i, int j, int sum);
 #endif /* PATHFINDER__H */

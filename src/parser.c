@@ -1,5 +1,5 @@
 #include "pathfinder.h"
-
+#include <stdio.h>
 
 bool is_contain(char **arr, int size, char *str) {
     for (int i = 0; i < size; i++) {
@@ -16,23 +16,25 @@ bool is_contain(char **arr, int size, char *str) {
 
 int get_strarr_index(char **arr, char *str) {
     for (int i = 0; arr[i] != NULL; i++) {
+        //printf("arr = %s        , str = %s\n", arr[i], str);
         if (mx_strcmp(arr[i], str) == 0) {
                 return i;
         }
         
     }
+    
     return -1;
 }
 
 
 char **parse_islands(char const * filename, int size) {
-    
     char *str = mx_file_to_str(filename);
     char ** first_split = mx_strsplit(str, '-');
     char ** sec_split = mx_strsplit(str, ',');
     char *tmp;
 
-    char **str_arr = malloc(size * sizeof(char *));
+
+    char **str_arr = malloc(size * sizeof(char *) + 1);
     int j = 0;
     int i = 0;
     int index;
@@ -52,11 +54,9 @@ char **parse_islands(char const * filename, int size) {
         }
 
     }
-
-    str_arr[i] = NULL;
+    str_arr[i] = NULL;  
 
     mx_del_strarr(&first_split);
-    //mx_printerr("HER");
                 
     mx_del_strarr(&sec_split);
 
