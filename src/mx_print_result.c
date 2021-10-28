@@ -50,7 +50,7 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
                     }
                     set_result_zero(result, size);
                     set_matrix_zero(matrix, copy_matrix, size);
-
+                    
                     copy_matrix[i][tmp] = 9998;
                     copy_matrix[tmp][i] = 9998;
 
@@ -82,10 +82,10 @@ void mx_print_result(int **matrix, int **result, char **islands, int i, int j) {
     //ROUTE 
     mx_printstr("Route: ");
     mx_printstr(islands[i]);
-
-
     mx_print_route(result, islands, i, j);
     mx_printchar('\n');
+
+    //DISTANCE
     if (result[i][j] == 0) {
         mx_printstr("Distance: ");
         mx_printint(matrix[i][j]);
