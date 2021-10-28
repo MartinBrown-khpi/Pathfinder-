@@ -1,5 +1,5 @@
 #include "pathfinder.h"
-#include <stdio.h>
+//#include <stdio.h>
 
 void mx_print_logic(int **matrix,int size, int **result, char **islands) {
     //create once matrix 
@@ -34,9 +34,6 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
         for (int j = i; j < size; j++) {
             deep = 0;
             if (i != j) {
-                set_matrix_zero(matrix, copy_matrix, size);
-                set_result_zero(result, size);
-                
                 mx_print_result(once_matrix, once_result, islands, i, j);
 
                 tmp = once_result[i][j];
@@ -47,7 +44,6 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
                 
                 for (int x = deep; x > 0; x--) {
                     
-                    
                     tmp = once_result[i][j];
                     for (int y = x; y - 1 > 0; y--) {
                         tmp = once_result[i][tmp];
@@ -55,13 +51,12 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
                     set_result_zero(result, size);
                     set_matrix_zero(matrix, copy_matrix, size);
 
-                    copy_matrix[i][tmp] = 999;
-                    copy_matrix[tmp][i] = 999;
+                    copy_matrix[i][tmp] = 9998;
+                    copy_matrix[tmp][i] = 9998;
 
 
                     mx_finder(copy_matrix, size, result);
                     if (once_matrix[i][j] == copy_matrix[i][j]) {
-                        printf("SECOND PRINT\n");
                         mx_print_result(copy_matrix, result, islands, i, j);
                         break;
                     }
@@ -70,36 +65,49 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
             }
 
         }
-        printf("\n");
     }
 }
 
+
+
 void mx_print_result(int **matrix, int **result, char **islands, int i, int j) {
-    printf("========================================\n");
-    printf("Path: %s -> %s \n", islands[i], islands[j]); 
-    printf("Route: %s ", islands[i]);
+    mx_printstr("========================================\n");
+    // PATH 
+    mx_printstr("Path: ");
+    mx_printstr(islands[i]);
+    mx_printstr(" -> ");
+    mx_printstr(islands[j]);
+    mx_printchar('\n');
+
+    //ROUTE 
+    mx_printstr("Route: ");
+    mx_printstr(islands[i]);
+
+
     mx_print_route(result, islands, i, j);
-    printf("\n");
+    mx_printchar('\n');
     if (result[i][j] == 0) {
-        printf("Distance: %d\n", matrix[i][j]);
+        mx_printstr("Distance: ");
+        mx_printint(matrix[i][j]);
+        mx_printchar('\n');
     }
     else {
-    printf("Distance: ");
+    mx_printstr("Distance: ");
         mx_print_dist(matrix, result, islands, i, j,0);
-        printf(" = %d\n", matrix[i][j]);
+        mx_printstr(" = ");
+        mx_printint(matrix[i][j]);
+        mx_printchar('\n');
     }
-    printf("========================================\n");
+    mx_printstr("========================================\n");
 }
 
 
 void mx_print_route(int **result, char **islands, int i, int j) {
-
     if (result[i][j] != 0) {
-
         mx_print_route(result, islands, i, result[i][j]);
     }
-    printf("-> ");
-    printf("%s", islands[j]);
+    mx_printstr(" -> ");
+    mx_printstr(islands[j]);
 }
 
 int mx_print_dist(int **matrix, int **result, char **islands, int i, int j, int sum) {
@@ -108,10 +116,11 @@ int mx_print_dist(int **matrix, int **result, char **islands, int i, int j, int 
         mx_print_dist(matrix, result, islands, i, result[i][j], sum);
     }
     if (matrix[i][j] - sum == 0) {
-        printf("%d", sum);
+        mx_printint(sum);
     }
     else {
-        printf(" + %d", matrix[i][j] - sum);
+        mx_printstr(" + ");
+        mx_printint(matrix[i][j] - sum);
     }
     return sum;
  }
