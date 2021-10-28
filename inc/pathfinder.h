@@ -9,7 +9,8 @@ int count_lines(const char *filename);
 void mx_printerr(const char *err);
 bool mx_isdigit(int c);
 bool mx_is_letter(char c);
-
+void set_result_zero(int **result, int size);
+void set_matrix_zero(int ** matrix, int ** copy_matrix, int size);
 // Validator func 
 void mx_usage(int argc);
 void mx_exist(char const *argv[]);
@@ -24,7 +25,8 @@ int **parse_to_matrix(const char * filename, char **islands, int size);
 // Finder func
 void mx_finder(int **matrix, int size, int **result);
 // Print result func
-void mx_print_result(int **matrix,int size, int **result, char **islands);
+void mx_print_result(int **matrix, int **result, char **islands, int i, int j);
+void mx_print_logic(int **matrix,int size, int **result, char **islands);
 void mx_print_route(int **result, char **islands, int i, int j);
-//int  mx_print_dist(int **matrix, int **result, char **islands, int i, int j, int sum);
+int  mx_print_dist(int **matrix, int **result, char **islands, int i, int j, int sum);
 #endif /* PATHFINDER__H */

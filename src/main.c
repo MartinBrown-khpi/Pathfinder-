@@ -38,9 +38,9 @@ int main(int argc, char const *argv[])
             result[i][j] = 0;
         }
     }
-    mx_finder(matrix,first_digit, result);
     
-    mx_print_result(matrix, first_digit, result, islands);
+    
+    mx_print_logic(matrix, first_digit, result, islands);
     
     // FREE MEMORY
     //mx_del_strarr(&islands);
