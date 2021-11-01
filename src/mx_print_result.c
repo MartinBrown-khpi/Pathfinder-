@@ -8,21 +8,20 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
     int * distances = (int *)malloc(size * sizeof(int));
     int *path = (int *)malloc(size * sizeof(int));
     
-    int start = 0;
-    mx_finder(matrix, size, start, distances, path);
     
-    for (int i = 0; i < size; ++i)
-    {
-        printf("VES : %d = %d\n", i, distances[i]);
-    }
-    printf("PATH+\n");
+
     for (int i = 0; i < size; i++) {
-        printf("%d\t", path[i]);
+        mx_finder(matrix, size, i, distances, path);
+        for (int j = i; j < size; j++) {
+        
+        if (i != j) {
+            mx_print_result(distances, path, islands, i, j);
+        }
+
+        }
+
     }
-    printf("PATH+\n");
-    mx_print_result(distances, path, islands, 0, 2);
-    printf("tupoi print %s", islands[0]);
-    
+
     result[0][0] = 0;
 }
 
@@ -46,7 +45,7 @@ void mx_print_result(int *distances, int *result, char **islands, int i, int j) 
     //DISTANCE
     if (result[j] == 0) {
         mx_printstr("Distance: ");
-        mx_printint(distances[i]);
+        mx_printint(distances[j]);
         mx_printchar('\n');
     }
     else {
