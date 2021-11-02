@@ -11,14 +11,13 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
     int min_vertex = start;
 
     for (int i = 0; i < size; i++) {
-        helper[i] = matrix[0][i];
+        helper[i] = matrix[start][i];
         distances[i] = matrix[start][i];
         path[i] = 0;
         visited[i] = false;
     }
     //visited[start] = true;
-    helper[start] = INT_MAX;
-    
+    helper[start] = 0;
     int i = 0;
     while (min_dist != INT_MAX) {
         i = min_vertex;
@@ -32,12 +31,11 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
         min_dist = INT_MAX;
         for (int j = 0; j < size; j++) {
             if (!visited[j] && distances[j] < min_dist) {
-            min_dist = distances[j];
-            min_vertex = j;
+                min_dist = distances[j];
+                min_vertex = j;
             }
         }
     }
-    
 }
 
 
