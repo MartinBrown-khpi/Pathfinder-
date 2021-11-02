@@ -8,20 +8,23 @@ void mx_print_logic(int **matrix,int size, int **result, char **islands) {
     int * distances = (int *)malloc(size * sizeof(int));
     int *path = (int *)malloc(size * sizeof(int));
     
-    
+    mx_finder(matrix, size, 0, distances, path);
 
     for (int i = 0; i < size; i++) {
-        mx_finder(matrix, size, i, distances, path);
-        for (int j = i; j < size; j++) {
         
-        if (i != j) {
-            mx_print_result(distances, path, islands, i, j);
-        }
+        for (int j = i; j < size; j++) {
+            mx_finder(matrix, size, 0, distances, path);
+            
+
+            if (i != j) {
+                mx_print_result(distances, path, islands, i, j);
+
+            }
 
         }
 
     }
-
+    islands[0][0] = '[';
     result[0][0] = 0;
 }
 
