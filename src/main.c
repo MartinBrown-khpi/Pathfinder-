@@ -30,17 +30,9 @@ int main(int argc, char const *argv[])
         }
         printf("\n");
     }
-
-    int **result = (int**)malloc(first_digit * sizeof(int*));
-    for (int i = 0; i < first_digit; i++) {
-        result[i] = (int *)malloc(first_digit * sizeof(int));
-        for (int j = 0; j < first_digit; j++) {
-            result[i][j] = 0;
-        }
-    }
     
     
-    mx_print_logic(matrix, first_digit, result, islands);
+    mx_print_logic(matrix, first_digit, islands);
     
     // FREE MEMORY
     //mx_del_strarr(&islands);

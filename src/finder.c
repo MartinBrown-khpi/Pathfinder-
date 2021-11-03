@@ -6,18 +6,15 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
     bool visited[size];
     
 
-    int helper[size];
     int min_dist = 0;
     int min_vertex = start;
 
     for (int i = 0; i < size; i++) {
-        helper[i] = matrix[start][i];
         distances[i] = matrix[start][i];
-        path[i] = 0;
+        path[i] = -1;
         visited[i] = false;
     }
-    //visited[start] = true;
-    helper[start] = 0;
+
     int i = 0;
     while (min_dist != INT_MAX) {
         i = min_vertex;
@@ -25,6 +22,7 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
         for (int j = 0; j < size; j++) {
             if (distances[i] + matrix[i][j] < distances[j]) {
                 distances[j] = distances[i] + matrix[i][j];
+                //printf("Add %d to path\n", min_vertex);
                 path[j] = min_vertex;
             }
         }
@@ -38,35 +36,45 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
     }
 }
 
-
-int mx_get_min_index(int * array, int size) {
-    int min = INT_MAX;
-    int index = -1;
-    for (int i = 0; i < size; i++) {
-        if (array[i] < min) {
-            min = array[i];
-            index = i;
-        }
+void martix_cpy(int **dst, int **src, int size) {
+    if (!dst || !src) {
+        return;
     }
 
-    return index;
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            dst[i][j] = src[i][j];
+        }
+    }
 }
-/*
-func dijkstra(s):
-    for v∈V                    
-        d[v] = ∞
-        used[v] = false
-    d[s] = 0
-    for i∈V
-        v = null
-        for j∈V                        // найдём вершину с минимальным расстоянием
-            if !used[j] and (v == null or d[j] < d[v])
-                v = j
-        if d[v] == ∞
-            break
-        used[v] = true
-        for e : исходящие из v рёбра     // произведём релаксацию по всем рёбрам, исходящим из v
-            if d[v] + e.len < d[e.to]
-                d[e.to] = d[v] + e.len
 
-*/
+void set_matrix_zero(int **martix, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            martix[i][j] = 0;
+        }
+    }
+}
+
+
+int get_last_index(int *path, int last) {
+    if (!path) {
+        return -1;
+    }
+
+    while (path[last] != 0) {
+        last = path[last];
+    }
+    return last;
+}
+
+void set_walls(int **matrix, int **wall_matrix, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (wall_matrix[i][j] == 9999) {
+                matrix[i][j] = 9999;
+            }
+        }
+    }
+} 
+
