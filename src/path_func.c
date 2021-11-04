@@ -1,13 +1,13 @@
 #include "pathfinder.h"
 
-t_path *mx_create_path(int *route, int *distances, int size) {
+t_path *mx_create_path(int *route, long *distances, int size) {
     if (!route || !distances) {
         return NULL;
     }
 
     t_path *new_path = malloc(sizeof(t_path*));
     int *cp_route = (int *)malloc(size * sizeof(int));
-    int *cp_dist = (int *)malloc(size * sizeof(int));
+    long *cp_dist = (long *)malloc(size * sizeof(long));
     for (int i = 0; i < size; i++) {
         cp_route[i] = route[i];
         cp_dist[i] = distances[i];

@@ -2,10 +2,10 @@
 //#include <stdio.h>
 
 
-void print_mx(int **martix, int size) {
+void print_mx(long **martix, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            printf("%d\t", martix[i][j]);
+            printf("%ld\t", martix[i][j]);
         }
         printf("\n");
     }
@@ -18,16 +18,16 @@ void print_arr(int *arr, int size) {
     printf("\n\n");
 }
 
-void mx_print_logic(int **matrix,int size, char **islands) {
-    int * distances = (int *)malloc(size * sizeof(int));
+void mx_print_logic(long **matrix,int size, char **islands) {
+    long * distances = (long *)malloc(size * sizeof(long));
     int *path = (int *)malloc(size * sizeof(int));
     
-    int **default_matrix = (int **)malloc(size * sizeof(int*));
-    int **wall_matrix = (int **)malloc(size * sizeof(int*));
+    long **default_matrix = (long **)malloc(size * sizeof(long*));
+    long **wall_matrix = (long **)malloc(size * sizeof(long*));
 
     for (int i = 0; i < size; i++) {
-        default_matrix[i] = (int *)malloc(size * sizeof(int));
-        wall_matrix[i] = (int *)malloc(size * sizeof(int));
+        default_matrix[i] = (long *)malloc(size * sizeof(long));
+        wall_matrix[i] = (long *)malloc(size * sizeof(long));
     }
     set_matrix_zero(wall_matrix, size);
     martix_cpy(default_matrix, matrix, size);
@@ -49,11 +49,11 @@ void mx_print_logic(int **matrix,int size, char **islands) {
                 while (counter < MAX_EQUAL_PATH) {
                                         
                     if (path[j] != -1) {
-                        wall_matrix[j][path[j]] = 9999;
-                        wall_matrix[path[j]][j] = 9999;
+                        wall_matrix[j][path[j]] = LONG_MAX - INT_MAX;
+                        wall_matrix[path[j]][j] = LONG_MAX - INT_MAX;
                     }else {
-                        wall_matrix[i][j] = 9999;
-                        wall_matrix[j][i] = 9999;
+                        wall_matrix[i][j] = LONG_MAX - INT_MAX;
+                        wall_matrix[j][i] = LONG_MAX - INT_MAX;
                     }
 
                     set_walls(matrix, wall_matrix, size);
@@ -77,8 +77,8 @@ void mx_print_logic(int **matrix,int size, char **islands) {
                 while (counter < MAX_EQUAL_PATH) {
 
                     if (path[j] != -1) {
-                        wall_matrix[i][get_last_index(path, path[j])] = 9999;
-                        wall_matrix[get_last_index(path, path[j])][i] = 9999;
+                        wall_matrix[i][get_last_index(path, path[j])] = LONG_MAX - INT_MAX;
+                        wall_matrix[get_last_index(path, path[j])][i] = LONG_MAX - INT_MAX;
                     } else {
                         break;
                     }
@@ -105,10 +105,10 @@ void mx_print_logic(int **matrix,int size, char **islands) {
                     }
 
                 }
-                
+                //sort 
+                mx_sort_patharr(path_arr, counter, j);
+                // PRINT RESULT
                 for (int k = 0; k < counter; k++) {
-                    //printf("k = %d\n", k);
-                    //print_arr(path_arr[k]->route, size);
                     mx_print_result(path_arr[k]->distance, path_arr[k]->route, islands, i, j);
                     mx_delete_path(path_arr[k]);
                 }
@@ -126,7 +126,7 @@ void mx_print_logic(int **matrix,int size, char **islands) {
 
 
 
-void mx_print_result(int *distances, int *result, char **islands, int i, int j) {
+void mx_print_result(long *distances, int *result, char **islands, int i, int j) {
     mx_printstr("========================================\n");
     // PATH 
     mx_printstr("Path: ");
@@ -166,7 +166,7 @@ void mx_print_route(int *result, char **islands, int i, int j) {
     mx_printstr(islands[j]);
 }
 
-int mx_print_dist(int *distances, int *result, char **islands, int i, int sum) {
+int mx_print_dist(long *distances, int *result, char **islands, int i, long sum) {
     if (result[i] != -1) {
         sum = distances[result[i]];
         mx_print_dist(distances, result, islands, result[i], sum);

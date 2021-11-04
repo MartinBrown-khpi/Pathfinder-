@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 
-void mx_finder(int ** matrix, const int size, int start, int * distances, int * path) {
+void mx_finder(long ** matrix, const int size, int start, long * distances, int * path) {
     bool visited[size];
     
 
-    int min_dist = 0;
+    long min_dist = 0;
     int min_vertex = start;
 
     for (int i = 0; i < size; i++) {
@@ -16,7 +16,7 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
     }
 
     int i = 0;
-    while (min_dist != INT_MAX) {
+    while (min_dist != LONG_MAX) {
         i = min_vertex;
         visited[min_vertex] = true;
         for (int j = 0; j < size; j++) {
@@ -25,7 +25,7 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
                 path[j] = min_vertex;
             }
         }
-        min_dist = INT_MAX;
+        min_dist = LONG_MAX;
         for (int j = 0; j < size; j++) {
             if (!visited[j] && distances[j] < min_dist) {
                 min_dist = distances[j];
@@ -35,7 +35,7 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
     }
 }
 
-void martix_cpy(int **dst, int **src, int size) {
+void martix_cpy(long **dst, long **src, int size) {
     if (!dst || !src) {
         return;
     }
@@ -47,7 +47,7 @@ void martix_cpy(int **dst, int **src, int size) {
     }
 }
 
-void set_matrix_zero(int **martix, int size) {
+void set_matrix_zero(long **martix, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             martix[i][j] = 0;
@@ -67,11 +67,11 @@ int get_last_index(int *path, int last) {
     return last;
 }
 
-void set_walls(int **matrix, int **wall_matrix, int size) {
+void set_walls(long **matrix, long **wall_matrix, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            if (wall_matrix[i][j] == 9999) {
-                matrix[i][j] = 9999;
+            if (wall_matrix[i][j] == LONG_MAX - INT_MAX) {
+                matrix[i][j] = LONG_MAX - INT_MAX;
             }
         }
     }

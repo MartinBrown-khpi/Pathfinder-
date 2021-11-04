@@ -21,12 +21,13 @@ int main(int argc, char const *argv[])
         printf("%d = %s\n", i ,islands[i]);
     }
 
-    int ** matrix = parse_to_matrix(argv[1], islands, first_digit);
+    long ** matrix = parse_to_matrix(argv[1], islands, first_digit);
+    
     printf("lines = %d\n", count_line);
 
     for (int i = 0; i < first_digit; i++) {
         for (int j = 0; j < first_digit; j++) {
-            printf("%d\t", matrix[i][j]);
+            printf("%ld\t", matrix[i][j]);
         }
         printf("\n");
     }
