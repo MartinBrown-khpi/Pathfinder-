@@ -18,18 +18,26 @@ t_path *mx_create_path(int *route, int *distances, int size) {
     return new_path;
 }
 
-bool is_in_path_arr(t_path *arr, t_path path, int sizearr, int size_path_arr) {
+bool is_route_in_path_arr(t_path **arr, t_path *path, int sizearr, int j) {
     for (int i = 0; i < sizearr; i++) {
-        for (int j = 0; j < size_path_arr; j++) {
-            if (arr[i].distance[j] != path.distance[j]) {
-                return false;
-            }
-            if (arr[i].route[j] != path.route[j]) {
-                return false;
-            }
+        if (is_route_eq(arr[i]->route, path->route, j)) {
+            return true;
         }
     }
-    return true;
+    return false;
+}
+
+bool is_route_eq(int *fir, int *sec, int j) {
+    int tmp = j;
+
+    while (fir[tmp] == sec[tmp]) {
+        if (fir[tmp] == -1 && sec[tmp] == -1) {
+        return true;
+        }
+        tmp = fir[tmp];
+    }
+    return false;
+    
 }
 
 void mx_delete_path(t_path *path) {

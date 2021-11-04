@@ -3,7 +3,7 @@
 #include "libmx.h"
 
 #define INT_MAX 2147483645
-#define MAX_EQUAL_PATH 10
+#define MAX_EQUAL_PATH 20
 
 // structures 
 typedef struct o_path{
@@ -27,7 +27,8 @@ void martix_cpy(int **dst, int **src, int size);
 void set_walls(int **matrix, int **wall_matrix, int size);
 
 t_path *mx_create_path(int *route, int *distances, int size);
-bool is_in_path_arr(t_path *arr, t_path path, int sizearr, int size_path_arr);
+bool is_route_eq(int *fir, int *sec, int j);
+bool is_route_in_path_arr(t_path **arr, t_path *path, int sizearr, int j);
 void mx_delete_path(t_path *path);
 // Validator func 
 void mx_usage(int argc);

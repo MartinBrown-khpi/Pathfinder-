@@ -22,7 +22,6 @@ void mx_finder(int ** matrix, const int size, int start, int * distances, int * 
         for (int j = 0; j < size; j++) {
             if (distances[i] + matrix[i][j] < distances[j]) {
                 distances[j] = distances[i] + matrix[i][j];
-                //printf("Add %d to path\n", min_vertex);
                 path[j] = min_vertex;
             }
         }
@@ -62,7 +61,7 @@ int get_last_index(int *path, int last) {
         return -1;
     }
 
-    while (path[last] != 0) {
+    while (path[last] != -1) {
         last = path[last];
     }
     return last;

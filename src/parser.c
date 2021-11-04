@@ -54,7 +54,9 @@ char **parse_islands(char const * filename, int size) {
         }
 
     }
-    str_arr[i] = NULL;  
+    
+    //если разкомитить все упадет
+    //str_arr[i] = NULL;  
 
     mx_del_strarr(&first_split);
                 

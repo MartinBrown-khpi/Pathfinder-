@@ -32,6 +32,7 @@ void mx_print_logic(int **matrix,int size, char **islands) {
     set_matrix_zero(wall_matrix, size);
     martix_cpy(default_matrix, matrix, size);
 
+    t_path* new_path;
     t_path* path_arr[MAX_EQUAL_PATH];
     int counter = 0;
 
@@ -59,7 +60,6 @@ void mx_print_logic(int **matrix,int size, char **islands) {
                     mx_finder(matrix, size, i, distances, path);
                     
                     if (distances[j] == path_arr[0]->distance[j]) {
-                        //print_mx(matrix, size);
                         path_arr[counter] = mx_create_path(path, distances, size);
                         counter++;
                     } else {
@@ -68,13 +68,44 @@ void mx_print_logic(int **matrix,int size, char **islands) {
                 }
 
                 // установка стен и матрицы в дефолтные
-                //set_matrix_zero(wall_matrix, size);
-                //martix_cpy(matrix, default_matrix, size);
+                set_matrix_zero(wall_matrix, size);
+                martix_cpy(matrix, default_matrix, size);
                 // поиск дополнительных путей, с отсеканием первого "моста" 
+                mx_finder(default_matrix, size, i, distances, path);
+
+
+                while (counter < MAX_EQUAL_PATH) {
+
+                    if (path[j] != -1) {
+                        wall_matrix[i][get_last_index(path, path[j])] = 9999;
+                        wall_matrix[get_last_index(path, path[j])][i] = 9999;
+                    } else {
+                        break;
+                    }
+
+                    set_walls(matrix, wall_matrix, size);
+                    mx_finder(matrix, size, i, distances, path);
+
+                    //print_mx(wall_matrix, size);
+                    // printf("\n\n\n\n");
+
+                    if (distances[j] == path_arr[0]->distance[j]) {
+                        new_path = mx_create_path(path, distances, size);
+                        if (!is_route_in_path_arr(path_arr, new_path, counter, j)) {
+                            //printf("new\n");
+                            path_arr[counter] = new_path;
+                            counter++;
+                        }
+                        else {
+                            mx_delete_path(new_path);
+                        }
+                        
+                    } else {
+                        break;
+                    }
+
+                }
                 
-
-
-
                 for (int k = 0; k < counter; k++) {
                     //printf("k = %d\n", k);
                     //print_arr(path_arr[k]->route, size);
