@@ -16,7 +16,6 @@ bool is_contain(char **arr, int size, char *str) {
 
 int get_strarr_index(char **arr, char *str) {
     for (int i = 0; arr[i] != NULL; i++) {
-        //printf("arr = %s        , str = %s\n", arr[i], str);
         if (mx_strcmp(arr[i], str) == 0) {
                 return i;
         }
@@ -54,10 +53,12 @@ char **parse_islands(char const * filename, int size) {
         }
 
     }
-    str_arr[i] = NULL;  
 
-    mx_del_strarr(&first_split);
-                
+    //если разкомитить все упадет
+    //str_arr[i] = NULL;  
+
+
+    mx_del_strarr(&first_split);                
     mx_del_strarr(&sec_split);
 
     mx_strdel(&str);
@@ -66,20 +67,20 @@ char **parse_islands(char const * filename, int size) {
 }
 
 
-int **parse_to_matrix(const char * filename, char **islands, int size) {
+long **parse_to_matrix(const char * filename, char **islands, int size) {
 
-    int **matrix = (int**)malloc(size * sizeof(int*));
+    long **matrix = (long**)malloc(size * sizeof(long*));
 
 
 
     for (int i = 0; i < size; i++) {
-        matrix[i] = (int *)malloc(size * sizeof(int));
+        matrix[i] = (long *)malloc(size * sizeof(long));
         for (int j = 0; j < size; j++) {
             if (i == j) {
                 matrix[i][j] = 0;
             }
             else {
-                matrix[i][j] = 9999;
+                matrix[i][j] = LONG_MAX - INT_MAX;
             }
 
         }
@@ -134,7 +135,7 @@ int **parse_to_matrix(const char * filename, char **islands, int size) {
                 }
             }
         }
-        if (matrix[x][y] != 9999) {
+        if (matrix[x][y] != LONG_MAX - INT_MAX) {
             mx_printerr("error: duplicate bridges");
             exit(1);
         }

@@ -1,76 +1,140 @@
 #include "pathfinder.h"
 //#include <stdio.h>
 
-void mx_print_logic(int **matrix,int size, int **result, char **islands) {
-    //create once matrix 
-    int ** once_matrix = (int**)malloc(size * sizeof(int*));
 
+void print_mx(long **martix, int size) {
     for (int i = 0; i < size; i++) {
-        once_matrix[i] = (int *)malloc(size * sizeof(int));
+        for (int j = 0; j < size; j++) {
+            printf("%ld\t", martix[i][j]);
+        }
+        printf("\n");
     }
-    set_matrix_zero(matrix, once_matrix, size);
+}
 
-    // create copy matrix
-    int **copy_matrix = (int**)malloc(size * sizeof(int*));
-
+void print_arr(int *arr, int size) {
     for (int i = 0; i < size; i++) {
-        copy_matrix[i] = (int *)malloc(size * sizeof(int));
+        printf("%d\t", arr[i]);
     }
-    set_matrix_zero(matrix, copy_matrix, size);
+    printf("\n\n");
+}
+
+void mx_print_logic(long **matrix,int size, char **islands) {
+    long * distances = (long *)malloc(size * sizeof(long));
+    int *path = (int *)malloc(size * sizeof(int));
     
-    // create copy result
-    int ** once_result = (int**)malloc(size * sizeof(int*));
+    long **default_matrix = (long **)malloc(size * sizeof(long*));
+    long **wall_matrix = (long **)malloc(size * sizeof(long*));
+
     for (int i = 0; i < size; i++) {
-        once_result[i] = (int *)malloc(size * sizeof(int));
+        default_matrix[i] = (long *)malloc(size * sizeof(long));
+        wall_matrix[i] = (long *)malloc(size * sizeof(long));
     }
-    set_result_zero(once_result, size);
+    set_matrix_zero(wall_matrix, size);
+    martix_cpy(default_matrix, matrix, size);
 
+    t_path* new_path;
+    t_path* path_arr[MAX_EQUAL_PATH];
+    int counter = 0;
 
-    mx_finder(once_matrix,size, once_result);
-
-    int tmp = 0;
-    int deep = 0;
     for (int i = 0; i < size; i++) {
+        
         for (int j = i; j < size; j++) {
-            deep = 0;
             if (i != j) {
-                mx_print_result(once_matrix, once_result, islands, i, j);
-
-                tmp = once_result[i][j];
-                while (tmp != 0) {
-                    tmp = once_result[i][tmp];
-                    deep++;
-                }
                 
-                for (int x = deep; x > 0; x--) {
-                    
-                    tmp = once_result[i][j];
-                    for (int y = x; y - 1 > 0; y--) {
-                        tmp = once_result[i][tmp];
+                // пропуск по дефолным значениям и усановка его как кратчайшего                
+                mx_finder(default_matrix, size, i, distances, path);
+                path_arr[counter] = mx_create_path(path, distances, size);
+                counter++;
+                // поиск дополнительных путей, с отсеканием последнего "моста" 
+                while (counter < MAX_EQUAL_PATH) {
+                                        
+                    if (path[j] != -1) {
+                        wall_matrix[j][path[j]] = LONG_MAX - INT_MAX;
+                        wall_matrix[path[j]][j] = LONG_MAX - INT_MAX;
+                    }else {
+                        wall_matrix[i][j] = LONG_MAX - INT_MAX;
+                        wall_matrix[j][i] = LONG_MAX - INT_MAX;
                     }
-                    set_result_zero(result, size);
-                    set_matrix_zero(matrix, copy_matrix, size);
+
+                    set_walls(matrix, wall_matrix, size);
+                    mx_finder(matrix, size, i, distances, path);
                     
-                    copy_matrix[i][tmp] = 9998;
-                    copy_matrix[tmp][i] = 9998;
+                    if (distances[j] == path_arr[0]->distance[j]) {
+                        path_arr[counter] = mx_create_path(path, distances, size);
+                        counter++;
+                    } else {
+                        break;
+                    }
+                }
+
+                // установка стен и матрицы в дефолтные
+                set_matrix_zero(wall_matrix, size);
+                martix_cpy(matrix, default_matrix, size);
+                // поиск дополнительных путей, с отсеканием первого "моста" 
+                mx_finder(default_matrix, size, i, distances, path);
 
 
-                    mx_finder(copy_matrix, size, result);
-                    if (once_matrix[i][j] == copy_matrix[i][j]) {
-                        mx_print_result(copy_matrix, result, islands, i, j);
+                while (counter < MAX_EQUAL_PATH) {
+
+                    if (path[j] != -1) {
+                        wall_matrix[i][get_last_index(path, path[j])] = LONG_MAX - INT_MAX;
+                        wall_matrix[get_last_index(path, path[j])][i] = LONG_MAX - INT_MAX;
+                    } else {
+                        break;
+                    }
+
+                    set_walls(matrix, wall_matrix, size);
+                    mx_finder(matrix, size, i, distances, path);
+
+                    //print_mx(wall_matrix, size);
+                    // printf("\n\n\n\n");
+
+                    if (distances[j] == path_arr[0]->distance[j]) {
+                        new_path = mx_create_path(path, distances, size);
+                        if (!is_route_in_path_arr(path_arr, new_path, counter, j)) {
+                            //printf("new\n");
+                            path_arr[counter] = new_path;
+                            counter++;
+                        }
+                        else {
+                            mx_delete_path(new_path);
+                        }
+                        
+                    } else {
                         break;
                     }
 
                 }
+                //sort 
+                mx_sort_patharr(path_arr, counter, j);
+                // PRINT RESULT
+                for (int k = 0; k < counter; k++) {
+                    mx_print_result(path_arr[k]->distance, path_arr[k]->route, islands, i, j);
+                    mx_delete_path(path_arr[k]);
+                }
+                set_matrix_zero(wall_matrix, size);
+                martix_cpy(matrix, default_matrix, size);
+                counter = 0;
             }
+            
 
         }
+        
+
     }
+    for(int i = 0; i < size; i++){
+        free(wall_matrix[i]);
+        free(default_matrix[i]);
+    }
+    free(distances);
+    free(path);
+    free(wall_matrix);
+    free(default_matrix);
 }
 
 
 
-void mx_print_result(int **matrix, int **result, char **islands, int i, int j) {
+void mx_print_result(long *distances, int *result, char **islands, int i, int j) {
     mx_printstr("========================================\n");
     // PATH 
     mx_printstr("Path: ");
@@ -86,41 +150,41 @@ void mx_print_result(int **matrix, int **result, char **islands, int i, int j) {
     mx_printchar('\n');
 
     //DISTANCE
-    if (result[i][j] == 0) {
+    if (result[j] == -1) {
         mx_printstr("Distance: ");
-        mx_printint(matrix[i][j]);
+        mx_printint(distances[j]);
         mx_printchar('\n');
     }
     else {
     mx_printstr("Distance: ");
-        mx_print_dist(matrix, result, islands, i, j,0);
+        mx_print_dist(distances, result, islands, j, 0);
         mx_printstr(" = ");
-        mx_printint(matrix[i][j]);
+        mx_printint(distances[j]);
         mx_printchar('\n');
     }
     mx_printstr("========================================\n");
 }
 
 
-void mx_print_route(int **result, char **islands, int i, int j) {
-    if (result[i][j] != 0) {
-        mx_print_route(result, islands, i, result[i][j]);
+void mx_print_route(int *result, char **islands, int i, int j) {
+    if (result[j] != -1) {
+        mx_print_route(result, islands, i, result[j]);
     }
     mx_printstr(" -> ");
     mx_printstr(islands[j]);
 }
 
-int mx_print_dist(int **matrix, int **result, char **islands, int i, int j, int sum) {
-    if (result[i][j] != 0) {
-        sum = matrix[i][ result[i][j]];
-        mx_print_dist(matrix, result, islands, i, result[i][j], sum);
+int mx_print_dist(long *distances, int *result, char **islands, int i, long sum) {
+    if (result[i] != -1) {
+        sum = distances[result[i]];
+        mx_print_dist(distances, result, islands, result[i], sum);
     }
-    if (matrix[i][j] - sum == 0) {
+    if (distances[i] - sum == 0) {
         mx_printint(sum);
     }
     else {
         mx_printstr(" + ");
-        mx_printint(matrix[i][j] - sum);
+        mx_printint(distances[i] - sum);
     }
     return sum;
  }

@@ -1,45 +1,79 @@
 #include "pathfinder.h"
 #include <stdio.h>
-void mx_finder(int **matrix, int size, int **result) {
-    for (int k = 0; k < size; k++) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (matrix[i][j] > matrix[i][k] + matrix[k][j]) {
-                    matrix[i][j] = matrix[i][k] + matrix[k][j];
-                    result[i][j] = k;
-                }
+
+
+void mx_finder(long ** matrix, const int size, int start, long * distances, int * path) {
+    bool visited[size];
+    
+
+    long min_dist = 0;
+    int min_vertex = start;
+
+    for (int i = 0; i < size; i++) {
+        distances[i] = matrix[start][i];
+        path[i] = -1;
+        visited[i] = false;
+    }
+
+    int i = 0;
+    while (min_dist != LONG_MAX) {
+        i = min_vertex;
+        visited[min_vertex] = true;
+        for (int j = 0; j < size; j++) {
+            if (distances[i] + matrix[i][j] < distances[j]) {
+                distances[j] = distances[i] + matrix[i][j];
+                path[j] = min_vertex;
+            }
+        }
+        min_dist = LONG_MAX;
+        for (int j = 0; j < size; j++) {
+            if (!visited[j] && distances[j] < min_dist) {
+                min_dist = distances[j];
+                min_vertex = j;
             }
         }
     }
-    // printf("\n\n\n");
-    // for (int i = 0; i < size; i++) {
-    //     for (int j = 0; j < size; j++) {
-    //         printf("%d \t", matrix[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("\n\n\n");
-    // for (int i = 0; i < size; i++) {
-    //     for (int j = 0; j < size; j++) {
-    //         printf("%d \t", result[i][j]);
-    //     }
-    //     printf("\n");
-    // }
 }
 
+void martix_cpy(long **dst, long **src, int size) {
+    if (!dst || !src) {
+        return;
+    }
 
-void set_result_zero(int **result, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            result[i][j] = 0;
+            dst[i][j] = src[i][j];
         }
     }
 }
 
-void set_matrix_zero(int ** matrix, int ** copy_matrix, int size) {
+void set_matrix_zero(long **martix, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            copy_matrix[i][j] = matrix[i][j];
+            martix[i][j] = 0;
         }
-    }    
+    }
 }
+
+
+int get_last_index(int *path, int last) {
+    if (!path) {
+        return -1;
+    }
+
+    while (path[last] != -1) {
+        last = path[last];
+    }
+    return last;
+}
+
+void set_walls(long **matrix, long **wall_matrix, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (wall_matrix[i][j] == LONG_MAX - INT_MAX) {
+                matrix[i][j] = LONG_MAX - INT_MAX;
+            }
+        }
+    }
+} 
+
