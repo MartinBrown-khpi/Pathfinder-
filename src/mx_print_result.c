@@ -122,6 +122,14 @@ void mx_print_logic(long **matrix,int size, char **islands) {
         
 
     }
+    for(int i = 0; i < size; i++){
+        free(wall_matrix[i]);
+        free(default_matrix[i]);
+    }
+    free(distances);
+    free(path);
+    free(wall_matrix);
+    free(default_matrix);
 }
 
 

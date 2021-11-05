@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
     mx_print_logic(matrix, first_digit, islands);
     
     // FREE MEMORY
-    //mx_del_strarr(&islands);
+    mx_del_strarr(&islands);
     for(int i = 0; i < first_digit; i++){
         free(matrix[i]);
     }

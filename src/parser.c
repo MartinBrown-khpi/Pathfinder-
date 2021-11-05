@@ -16,7 +16,6 @@ bool is_contain(char **arr, int size, char *str) {
 
 int get_strarr_index(char **arr, char *str) {
     for (int i = 0; arr[i] != NULL; i++) {
-        //printf("arr = %s        , str = %s\n", arr[i], str);
         if (mx_strcmp(arr[i], str) == 0) {
                 return i;
         }
@@ -58,8 +57,8 @@ char **parse_islands(char const * filename, int size) {
     //если разкомитить все упадет
     //str_arr[i] = NULL;  
 
-    mx_del_strarr(&first_split);
-                
+
+    mx_del_strarr(&first_split);                
     mx_del_strarr(&sec_split);
 
     mx_strdel(&str);
